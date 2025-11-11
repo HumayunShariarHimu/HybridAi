@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid AI System</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* Reset & Body */
+* {box-sizing:border-box;margin:0;padding:0;}
+body {font-family:'Poppins',sans-serif;background:#0e1117;color:#e6edf3;display:flex;flex-direction:column;align-items:center;min-height:100vh;transition:0.3s;}
+
+/* Header */
+header {text-align:center;padding:25px;background:#161b22;border-bottom:1px solid #30363d;width:100%;box-shadow:0 2px 10px rgba(0,0,0,0.5);}
+header h1 {color:#00bfff;font-size:26px;margin-bottom:5px;}
+header p {color:#8b949e;font-size:14px;}
+
+/* Main Layout */
+main {width:95%;max-width:1000px;margin:25px auto;display:grid;grid-template-columns:1fr 1fr;gap:25px;}
+section.card {background:rgba(24,28,36,0.85);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 20px rgba(0,0,0,0.5);backdrop-filter:blur(10px);transition:0.3s;}
+section.card:hover {transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,0.6);}
+
+/* Headings */
+section h2 {color:#00bfff;margin-bottom:10px;font-size:18px;}
+
+/* Inputs & Textarea */
+textarea,input {width:100%;background:#0d1117;color:#e6edf3;border:1px solid #30363d;border-radius:10px;padding:10px;margin-top:8px;font-size:14px;resize:vertical;transition:0.2s;}
+textarea:focus,input:focus {border:1px solid #00bfff;outline:none;box-shadow:0 0 5px #00bfff;}
+
+/* Buttons */
+button {background:#00bfff;color:white;border:none;padding:10px 16px;border-radius:12px;cursor:pointer;margin-top:10px;font-weight:600;transition:0.3s;}
+button:hover {background:#0095d9;transform:translateY(-2px);}
+
+/* Output Boxes */
+.output {background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:10px;margin-top:10px;font-size:14px;white-space:pre-wrap;min-height:50px;box-shadow:inset 0 0 10px rgba(0,0,0,0.3);}
+
+/* Status Indicator */
+.status {font-size:12px;margin-top:5px;color:#8b949e;}
+.status span {font-weight:600;}
+.status span.ready {color:#00ff7f;}
+.status span.loading {color:#ffbf00;}
+.status span.error {color:#ff4d4d;}
+
+/* Footer */
+footer {margin-top:30px;color:#8b949e;font-size:13px;text-align:center;padding:20px;grid-column:1/-1;}
+
+/* Responsive */
+@media(max-width:900px){main{grid-template-columns:1fr;}}
+
+</style>
+</head>
+<body>
+
+<header>
+<h1>Hybrid AI</h1>
+<p>NLP | ML | Chatbot | Content | Semantic Research | Hybrid Chat | Status Enabled</p>
+</header>
+
+<main>
+
+<!-- NLP -->
+<section class="card">
+<h2>1️⃣ NLP Analysis</h2>
+<textarea id="nlpInput" placeholder="Type any sentence..."></textarea>
+<button id="nlpBtn">Analyze</button>
+<div class="status">Model Status: <span id="nlpStatus" class="loading">Loading...</span></div>
+<div id="nlpOutput" class="output"></div>
+</section>
+
+<!-- Machine Learning -->
+<section class="card">
+<h2>2️⃣ Machine Learning Prediction</h2>
+<input id="mlInput" type="number" placeholder="Enter number x...">
+<button id="mlBtn">Predict y = 2x - 1</button>
+<div class="status">Model Status: <span id="mlStatus" class="loading">Loading...</span></div>
+<div id="mlOutput" class="output"></div>
+</section>
+
+<!-- Content Generator -->
+<section class="card">
+<h2>3️⃣ Content Generator</h2>
+<button id="contentBtn">Generate Creative Text</button>
+<div class="status">Model Status: <span id="contentStatus" class="ready">Ready</span></div>
+<div id="contentOutput" class="output"></div>
+</section>
+
+<!-- Chatbot -->
+<section class="card">
+<h2>4️⃣ Chatbot Conversation</h2>
+<textarea id="chatInput" placeholder="Say something..."></textarea>
+<button id="chatBtn">Send</button>
+<div class="status">Model Status: <span id="chatStatus" class="ready">Ready</span></div>
+<div id="chatOutput" class="output"></div>
+</section>
+
+<!-- Semantic Research -->
+<section class="card">
+<h2>5️⃣ Semantic Research</h2>
+<input id="query" placeholder="Your research query...">
+<textarea id="docs" placeholder="Doc1\nDoc2\nDoc3"></textarea>
+<button id="researchBtn">Find Similar</button>
+<div class="status">Model Status: <span id="researchStatus" class="loading">Loading...</span></div>
+<div id="researchOutput" class="output"></div>
+</section>
+
+<!-- Hybrid AI Chat -->
+<section class="card">
+<h2>6️⃣ Hybrid AI Chat</h2>
+<textarea id="hybridInput" placeholder="Ask anything..."></textarea>
+<button id="hybridBtn">Hybrid Respond</button>
+<div class="status">Model Status: <span id="hybridStatus" class="ready">Ready</span></div>
+<div id="hybridOutput" class="output"></div>
+</section>
+
+</main>
+
+<footer>Humayun Shariar Himu | Hybrid AI System</footer>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/compromise@14.11.0/builds/compromise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.6.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rita-js@2.0.1/dist/rita-full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/rivescript@2.0.0/dist/rivescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder@5.0.2/dist/universal-sentence-encoder.min.js"></script>
+
+<script>
+/********** NLP **********/
+const nlpStatus = document.getElementById("nlpStatus");
+nlpStatus.textContent = "Ready";
+nlpStatus.className = "ready";
+document.getElementById("nlpBtn").onclick = () => {
+  const text = document.getElementById("nlpInput").value.trim();
+  if(!text) return alert("Write something first!");
+  const doc = window.nlp(text);
+  const nouns = doc.nouns().out('array');
+  const verbs = doc.verbs().out('array');
+  let sentiment = "Neutral 😐";
+  if(/love|happy|good|awesome/i.test(text)) sentiment="Positive ❤️";
+  if(/hate|bad|sad|angry/i.test(text)) sentiment="Negative 💔";
+  document.getElementById("nlpOutput").innerText = `Nouns: ${nouns}\nVerbs: ${verbs}\nSentiment: ${sentiment}`;
+};
+
+/********** ML **********/
+const mlStatus = document.getElementById("mlStatus");
+const model = tf.sequential();
+model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+model.compile({ optimizer: 'sgd', loss: 'meanSquaredError' });
+const xs = tf.tensor2d([-1,0,1,2,3],[5,1]);
+const ys = tf.tensor2d([-3,-1,1,3,5],[5,1]);
+model.fit(xs, ys, {epochs:150}).then(()=>{
+  mlStatus.textContent = "Ready";
+  mlStatus.className="ready";
+  document.getElementById("mlBtn").onclick = async () => {
+    const xVal = parseFloat(document.getElementById("mlInput").value);
+    if(isNaN(xVal)) return alert("Enter a valid number!");
+    const y = (await model.predict(tf.tensor2d([xVal],[1,1])).array())[0][0].toFixed(2);
+    document.getElementById("mlOutput").innerText = `Predicted y = ${y}`;
+  };
+});
+
+/********** Content **********/
+const contentStatus = document.getElementById("contentStatus");
+contentStatus.textContent="Ready";
+document.getElementById("contentBtn").onclick = ()=>{
+  const markov = new RiTa.Markov(3);
+  markov.loadText("AI is revolutionizing creativity, logic, and digital innovation across the world.");
+  const sentences = markov.generateSentences(2);
+  document.getElementById("contentOutput").innerText = sentences.join(" ");
+};
+
+/********** Chatbot **********/
+const chatStatus = document.getElementById("chatStatus");
+chatStatus.textContent="Ready";
+const bot = new RiveScript();
+bot.stream(`
+! version = 2.0
++ hello
+- Hi there! 👋 How can I assist you?
++ who are you
+- I'm your AI assistant!
++ bye
+- Goodbye! 👋
++ *
+- Tell me more...
+`);
+bot.sortReplies();
+document.getElementById("chatBtn").onclick = async ()=>{
+  const msg = document.getElementById("chatInput").value.trim();
+  if(!msg) return;
+  const reply = await bot.reply("local-user", msg);
+  const chat = document.getElementById("chatOutput");
+  chat.innerText += `🧑: ${msg}\n🤖: ${reply}\n\n`;
+  chat.scrollTop = chat.scrollHeight;
+  document.getElementById("chatInput").value="";
+};
+
+/********** Semantic Research **********/
+const researchStatus = document.getElementById("researchStatus");
+let useModel = null;
+(async()=>{
+  try{
+    useModel = await use.load();
+    researchStatus.textContent="Ready";
+    researchStatus.className="ready";
+  }catch(e){
+    researchStatus.textContent="Error";
+    researchStatus.className="error";
+  }
+})();
+document.getElementById("researchBtn").onclick=async()=>{
+  if(!useModel) return alert("Model not ready!");
+  const query=document.getElementById("query").value.trim();
+  const docs=document.getElementById("docs").value.trim().split("\n");
+  if(!query||docs.length===0) return alert("Fill all fields!");
+  const all=docs.concat([query]);
+  const emb=await useModel.embed(all);
+  const arr=await emb.array();
+  const qVec=arr[arr.length-1];
+  const cosine=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0)/(Math.sqrt(a.reduce((s,v)=>s+v*v,0))*Math.sqrt(b.reduce((s,v)=>s+v*v,0)));
+  const scores=docs.map((t,i)=>({text:t,score:cosine(arr[i],qVec)})).sort((a,b)=>b.score-a.score);
+  document.getElementById("researchOutput").innerHTML=scores.map(s=>`🔹 ${s.text} — <b>${s.score.toFixed(3)}</b>`).join("<br>");
+};
+
+/********** Hybrid AI Chat **********/
+const hybridStatus=document.getElementById("hybridStatus");
+document.getElementById("hybridBtn").onclick=async()=>{
+  const input=document.getElementById("hybridInput").value.trim();
+  if(!input) return;
+
+  // NLP
+  const doc = window.nlp(input);
+  const nouns = doc.nouns().out('array').join(", ");
+  const verbs = doc.verbs().out('array').join(", ");
+
+  // ML
+  const mlVal=(await model.predict(tf.tensor2d([input.length%5],[1,1])).array())[0][0].toFixed(2);
+
+  // Content
+  const markov=new RiTa.Markov(2);
+  markov.loadText("AI combines logic, creativity, and language to generate unique insights.");
+  const idea=markov.generateSentences(1);
+
+  // Chatbot
+  const botReply=await bot.reply("hybrid-user", input);
+
+  // Semantic top doc
+  let topDoc="No semantic match.";
+  if(useModel){
+    const allDocs=["AI enhances digital intelligence.","Machine learning predicts patterns.", input];
+    const emb=await useModel.embed(allDocs);
+    const arr=await emb.array();
+    const cosine=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0)/(Math.sqrt(a.reduce((s,v)=>s+v*v,0))*Math.sqrt(b.reduce((s,v)=>s+v*v,0)));
+    const scores=allDocs.slice(0,2).map((t,i)=>({text:t,score:cosine(arr[i],arr[2])})).sort((a,b)=>b.score-a.score);
+    topDoc=scores[0].text+" — "+scores[0].score.toFixed(3);
+  }
+
+  document.getElementById("hybridOutput").innerText=`
+🧠 NLP → Nouns: ${nouns} | Verbs: ${verbs}
+📈 ML → Prediction: ${mlVal}
+🎨 Content → ${idea}
+🤖 Chatbot → ${botReply}
+📚 Top Research → ${topDoc}
+📌 Hybrid Insight → Combining NLP + ML + Creativity + Chatbot + Research
+`;
+};
+</script>
+
+</body>
+</html>
